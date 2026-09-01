@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Activities — SecureShare{% endblock %}
+
+{% block navbar %}{% with nav_active="activities" %}{% include "partials/app_nav.html" %}{% endwith %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+    <div class="page-header">
+        <div>
+            <h1>Activity Log</h1>
+            <p class="muted text-sm">Everything you've done in SecureShare — uploads, requests, grants, rejections, attribute changes, and more.</p>
+        </div>
+    </div>
+
+    <div class="panel">
+        {% if activity %}
+        <table class="table">
+            <thead>
+                <tr><th>Type</th><th>Detail</th><th>When</th></tr>
+            </thead>
+            <tbody>
+                {% for a in activity %}
+                <tr>
+                    <td data-label="Type">{{ a.get_action_display }}</td>
+                    <td data-label="Detail">{{ a.detail }}</td>
+                    <td data-label="When" class="text-sm">{{ a.created_at|date:"M j, Y, g:i A" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">No activity yet.</p>
+        {% endif %}
+    </div>
+
+    <p style="margin-top:20px;"><a href="{% url 'dashboard' %}">&larr; Back to Dashboard</a></p>
+</div>
+{% endblock %}

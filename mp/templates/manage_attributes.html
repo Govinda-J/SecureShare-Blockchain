@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Attributes — {{ profile.user.username }}{% endblock %}
+
+{% block navbar %}{% include "partials/staff_nav.html" %}{% endblock %}
+
+{% block content %}
+<datalist id="attr-key-suggestions">
+    {% for k in attribute_keys %}<option value="{{ k }}">{% endfor %}
+</datalist>
+
+<div class="page-wrap narrow">
+    <div class="page-header"><div><h1>{{ profile.name }}</h1><p class="muted text-sm">@{{ profile.user.username }}</p></div></div>
+
+    <div class="panel" style="margin-bottom:20px;">
+        <div class="panel-header"><h2>Attributes</h2></div>
+        <table class="table">
+            <thead><tr><th>Key</th><th>Value</th><th></th></tr></thead>
+            <tbody>
+            {% for a in profile.attributes.all %}
+                <tr>
+                    <td data-label="Key">{{ a.key }}</td>
+                    <td data-label="Value">{{ a.value }}</td>
+                    <td data-label="">
+                        <form method="post" class="inline-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="attr_id" value="{{ a.id }}">
+                            <button type="submit" class="btn btn-danger-outline btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="3"><em class="muted">No attributes assigned yet.</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card card-pad">
+        <h2 style="margin-bottom:12px;">Assign New Attribute</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add">
+            <div class="form-group">
+                <label>Key</label>
+                <input type="text" name="key" placeholder="e.g. department" list="attr-key-suggestions" required>
+            </div>
+            <div class="form-group">
+                <label>Value</label>
+                <input type="text" name="value" placeholder="e.g. HR" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Add</button>
+        </form>
+    </div>
+
+    <p style="margin-top:20px;"><a href="{% url 'admin_home' %}">&larr; Back to Admin Dashboard</a></p>
+</div>
+{% endblock %}

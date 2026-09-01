@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — SecureShare{% endblock %}
+
+{% block navbar %}{% with nav_active="dashboard" %}{% include "partials/app_nav.html" %}{% endwith %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap wide">
+    <div class="page-header">
+        <div>
+            <h1>Welcome back, {{ profile.name }}</h1>
+            <p class="muted text-sm">@{{ profile.user.username }} &middot; <span class="mono">{{ wallet_address }}</span></p>
+        </div>
+        <div>
+            {% for k, v in my_attributes.items %}<span class="chip">{{ k }}:{{ v }}</span>{% empty %}<span class="chip chip-muted">No attributes assigned yet</span>{% endfor %}
+        </div>
+    </div>
+
+    <section class="action-grid">
+        <a class="action-card" href="{% url 'upload' %}">
+            <span class="action-icon">&#11014;&#65039;</span>
+            <h3>Upload File</h3>
+            <p>Encrypt a file and set who can access it</p>
+        </a>
+        <a class="action-card" href="{% url 'request_attributes' %}">
+            <span class="action-icon">&#127991;&#65039;</span>
+            <h3>Request Attributes
+                {% if pending_attr_requests %}<span class="badge">{{ pending_attr_requests }} pending</span>{% endif %}
+            </h3>
+            <p>Ask an admin to verify a new attribute for you</p>
+        </a>
+        <a class="action-card" href="{% url 'request' %}">
+            <span class="action-icon">&#128273;</span>
+            <h3>File Access Request</h3>
+            <p>Ask a file owner for access to a file</p>
+        </a>
+    </section>
+
+    <div class="dashboard-columns">
+        <section class="panel">
+            <div class="panel-header">
+                <h2>Your Access Requests</h2>
+                <a href="{% url 'files' %}" class="link-more">View all files &rarr;</a>
+            </div>
+            <div class="scroll-list">
+                {% if my_requests %}
+                <table class="mini-table">
+                    <tr><th>File</th><th>Status</th><th></th></tr>
+                    {% for r in my_requests %}
+                    <tr>
+                        <td>{{ r.file.file_name }}</td>
+                        <td>
+                            {% if r.file.is_deleted %}
+                            <span class="status-badge status-rejected">File Deleted</span>
+                            {% else %}
+                            <span class="status-badge {% if r.status == 'revoked' %}status-rejected{% else %}status-{{ r.status }}{% endif %}">{{ r.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align:right; white-space:nowrap;">
+                            {% if r.status == 'approved' and not r.file.is_deleted %}
+                            <form method="post" action="{% url 'download' %}" class="inline-form" onsubmit="showSubmitOverlay('Downloading and decrypting...')">
+                                {% csrf_token %}
+                                <input type="hidden" name="filename" value="{{ r.file.file_name }}">
+                                <button type="submit" class="icon-btn" title="Download {{ r.file.file_name }}">&#8595;</button>
+                            </form>
+                            {% endif %}
+                            <form method="post" action="{% url 'dismiss_access_request' r.id %}" class="inline-form" onsubmit="return confirm('Remove this entry from your list?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{% url 'dashboard' %}">
+                                <button type="submit" class="icon-btn" title="Remove from list">&times;</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% else %}
+                <p class="empty-state">No access requests yet — try <a href="{% url 'request' %}">requesting access</a> to a file.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <aside class="panel">
+            <div class="panel-header"><h2>Quick Links</h2></div>
+            <ul class="quick-links">
+                <li><a href="{% url 'files' %}">&#128193; Accessible &amp; Owned Files</a></li>
+                <li><a href="{% url 'activities' %}">&#128220; Full Activity Log</a></li>
+                <li><a href="{% url 'profile' %}">&#128100; Your Profile</a></li>
+            </ul>
+            {% if owned_files %}
+            <div class="panel-header" style="margin-top:18px;"><h2>Your Files</h2></div>
+            <ul class="quick-links">
+                {% for f in owned_files|slice:":5" %}
+                <li><a href="{% url 'grant' %}?filename={{ f.file_name|urlencode }}">
+                    &#128196; {{ f.file_name }}
+                    {% if f.pending %}<span class="badge" style="margin-left:auto;">{{ f.pending }} pending</span>{% endif %}
+                </a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </aside>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+<nav class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="{% url 'admin_home' %}"><span class="brand-mark">&#9670;</span> SecureShare <span class="chip chip-muted" style="margin-left:6px;">Admin</span></a>
+        <div class="nav-links">
+            <a href="{% url 'admin_home' %}" class="active">Admin Dashboard</a>
+            <a href="/admin/">Django Admin</a>
+        </div>
+        <div class="nav-actions">
+            <a href="{% url 'logout' %}" class="btn btn-outline btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>

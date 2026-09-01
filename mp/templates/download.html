@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Download File — SecureShare{% endblock %}
+
+{% block navbar %}{% with nav_active="files" %}{% include "partials/app_nav.html" %}{% endwith %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap narrow">
+    <div class="page-header"><div><h1>Download File</h1><p class="muted text-sm">Decrypt and download a file you've been granted access to</p></div></div>
+    <div class="card card-pad">
+        <form method="post" action="" onsubmit="showSubmitOverlay('Downloading and decrypting...')">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>File name</label>
+                <input type="text" name="filename" placeholder="e.g. report.pdf" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Download &amp; Decrypt</button>
+        </form>
+    </div>
+    <p style="margin-top:20px;"><a href="{% url 'files' %}">&larr; Back to Files</a></p>
+</div>
+{% endblock %}

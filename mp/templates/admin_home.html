@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard — SecureShare{% endblock %}
+
+{% block navbar %}{% include "partials/staff_nav.html" %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap wide">
+    <div class="page-header"><div><h1>Admin Dashboard</h1></div></div>
+
+    <div class="stat-row">
+        <div class="stat-box"><div class="num">{{ total_users }}</div><div class="label">Users</div></div>
+        <div class="stat-box"><div class="num">{{ total_files }}</div><div class="label">Files</div></div>
+        <div class="stat-box"><div class="num">{{ pending_count }}</div><div class="label">Pending Requests</div></div>
+        <div class="stat-box"><div class="num">{{ approved_count }}</div><div class="label">Approved</div></div>
+        <div class="stat-box"><div class="num">{{ rejected_count }}</div><div class="label">Rejected</div></div>
+    </div>
+
+    {% if attribute_requests %}
+    <div class="panel" style="margin-bottom:24px;">
+        <div class="panel-header"><h2>Pending Attribute Requests</h2></div>
+        <table class="table">
+            <thead><tr><th>User</th><th>Requested</th><th></th></tr></thead>
+            <tbody>
+            {% for r in attribute_requests %}
+                <tr>
+                    <td data-label="User">{{ r.profile.user.username }}</td>
+                    <td data-label="Requested"><span class="chip">{{ r.key }}:{{ r.value }}</span></td>
+                    <td data-label="" style="white-space:nowrap;">
+                        <form method="post" action="{% url 'resolve_attribute_request' r.id %}" class="inline-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="approve">
+                            <button type="submit" class="btn btn-primary btn-sm">Approve</button>
+                        </form>
+                        <form method="post" action="{% url 'resolve_attribute_request' r.id %}" class="inline-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit" class="btn btn-danger-outline btn-sm">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <div class="panel" style="margin-bottom:24px;">
+        <div class="panel-header"><h2>Users &amp; Assigned Attributes</h2></div>
+        <table class="table">
+            <thead><tr><th>Username</th><th>Name</th><th>Attributes</th><th></th></tr></thead>
+            <tbody>
+            {% for p in profiles %}
+                <tr>
+                    <td data-label="Username">{{ p.user.username }}</td>
+                    <td data-label="Name">{{ p.name }}</td>
+                    <td data-label="Attributes">
+                        {% for a in p.attributes.all %}<span class="chip">{{ a.key }}:{{ a.value }}</span>{% empty %}<em class="muted">none</em>{% endfor %}
+                    </td>
+                    <td data-label=""><a href="{% url 'manage_attributes' p.id %}" class="btn btn-outline btn-sm">Manage</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2>Site-Wide Activity Log</h2>
+        </div>
+        <p class="muted text-sm" style="margin-bottom:12px;">Visible only here — never shown on a shared page any regular user can reach.</p>
+        {% if activity %}
+        <div class="scroll-list" style="max-height:420px;">
+            <table class="table">
+                <thead><tr><th>User</th><th>Type</th><th>Detail</th><th>When</th></tr></thead>
+                <tbody>
+                {% for a in activity %}
+                    <tr>
+                        <td data-label="User">{{ a.user.username|default:"—" }}</td>
+                        <td data-label="Type">{{ a.get_action_display }}</td>
+                        <td data-label="Detail">{{ a.detail }}</td>
+                        <td data-label="When" class="text-sm">{{ a.created_at|date:"M j, Y, g:i A" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty-state">No activity yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

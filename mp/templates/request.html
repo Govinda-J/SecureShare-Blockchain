@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Request Access — SecureShare{% endblock %}
+
+{% block navbar %}{% with nav_active="dashboard" %}{% include "partials/app_nav.html" %}{% endwith %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap narrow">
+    <div class="page-header"><div><h1>Request File Access</h1><p class="muted text-sm">Ask a file owner for access</p></div></div>
+    <div class="card card-pad">
+        <form method="post" action="" onsubmit="showSubmitOverlay('Registering your request...')">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>File name</label>
+                <input type="text" name="filename" placeholder="e.g. report.pdf" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Request Access</button>
+        </form>
+    </div>
+    <p style="margin-top:20px;"><a href="{% url 'dashboard' %}">&larr; Back to Dashboard</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+<nav class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="{% url 'home' %}"><span class="brand-mark">&#9670;</span> SecureShare</a>
+        <div class="nav-links"></div>
+        <div class="nav-actions">
+            <a href="{% url 'login' %}" class="btn btn-outline btn-sm">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Get Started</a>
+            <a href="/admin/login/?next=/staff/" class="btn btn-outline btn-sm">Staff Login</a>
+        </div>
+    </div>
+</nav>

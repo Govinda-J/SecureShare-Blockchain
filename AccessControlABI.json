@@ -1,0 +1,780 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "AccessGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "AccessRejected",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "AccessRequested",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "AccessRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "chunkHash",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "chunkLink",
+            "type": "string"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct AccessControl.ChunkMetadataStruct",
+        "name": "metadata",
+        "type": "tuple"
+      }
+    ],
+    "name": "ChunkMetadataUploaded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "fileId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "coefficients",
+        "type": "bytes"
+      }
+    ],
+    "name": "FileMetadataUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "fileId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32[]",
+            "name": "fileLink",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "uploaders",
+            "type": "address[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "iv",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "cipherKey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "string[]",
+            "name": "accessPolicy",
+            "type": "string[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "coefficients",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "request_id",
+            "type": "bytes32[]"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct AccessControl.FileMetadataStruct",
+        "name": "metadata",
+        "type": "tuple"
+      }
+    ],
+    "name": "FileMetadataUploaded",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "encryptedResponse",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint8",
+        "name": "status",
+        "type": "uint8"
+      }
+    ],
+    "name": "grantAccess",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "username",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "password",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "department",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "subscriptionPeriod",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct AccessControl.RegisterUserData",
+        "name": "data",
+        "type": "tuple"
+      }
+    ],
+    "name": "registerUser",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fileId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "encryptedRequest",
+        "type": "bytes"
+      }
+    ],
+    "name": "requestAccess",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "fileId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32[]",
+            "name": "fileLink",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "uploaders",
+            "type": "address[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "iv",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "cipherKey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "string[]",
+            "name": "accessPolicy",
+            "type": "string[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "coefficients",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "request_id",
+            "type": "bytes32[]"
+          }
+        ],
+        "internalType": "struct AccessControl.FileMetadataStruct",
+        "name": "updatedMetadata",
+        "type": "tuple"
+      }
+    ],
+    "name": "revokeAccess",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fileId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "coefficients",
+        "type": "bytes"
+      }
+    ],
+    "name": "updateFileMetadata",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "chunkHash",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "chunkLink",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct AccessControl.ChunkMetadataStruct",
+        "name": "metadata",
+        "type": "tuple"
+      }
+    ],
+    "name": "uploadChunkMetadata",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fileId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32[]",
+            "name": "fileLink",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "uploaders",
+            "type": "address[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "iv",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "cipherKey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "string[]",
+            "name": "accessPolicy",
+            "type": "string[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "coefficients",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "request_id",
+            "type": "bytes32[]"
+          }
+        ],
+        "internalType": "struct AccessControl.FileMetadataStruct",
+        "name": "metadata",
+        "type": "tuple"
+      }
+    ],
+    "name": "uploadFileMetadata",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "userAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "username",
+        "type": "string"
+      }
+    ],
+    "name": "UserRegistered",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "AccessList",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "request",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "response",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint8",
+        "name": "status",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ChunkMetadata",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "chunkLink",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "FileMetadata",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "iv",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "cipherKey",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "coefficients",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "chunkHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getChunkMetadata",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "chunkLink",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct AccessControl.ChunkMetadataStruct",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "fileId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getFileMetadata",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32[]",
+            "name": "fileLink",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "uploaders",
+            "type": "address[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "iv",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes",
+            "name": "cipherKey",
+            "type": "bytes"
+          },
+          {
+            "internalType": "string[]",
+            "name": "accessPolicy",
+            "type": "string[]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "coefficients",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "request_id",
+            "type": "bytes32[]"
+          }
+        ],
+        "internalType": "struct AccessControl.FileMetadataStruct",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getRequest",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "requestId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getResponse",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "username",
+        "type": "string"
+      }
+    ],
+    "name": "getUser",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "userId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "username",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "passwordHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "department",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "subscriptionPeriod",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct AccessControl.User",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "usernameToAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "users",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "userId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "string",
+        "name": "username",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "passwordHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "department",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "subscriptionPeriod",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

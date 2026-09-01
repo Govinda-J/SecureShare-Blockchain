@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Revoke Access — SecureShare{% endblock %}
+
+{% block navbar %}{% with nav_active="files" %}{% include "partials/app_nav.html" %}{% endwith %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap narrow">
+    {% if users %}
+        <div class="page-header"><div><h1>Revoke Access</h1><p class="muted text-sm">{{ filename }}</p></div></div>
+        <div class="card card-pad">
+            <form method="post" action="" onsubmit="showSubmitOverlay('Revoking access and re-encrypting...')">
+                {% csrf_token %}
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <input type="hidden" name="action" value="Revoke">
+                {% for u in users %}
+                <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                    <input type="checkbox" name="users" value="{{ u }}" id="u-{{ forloop.counter }}" style="width:auto;">
+                    <label for="u-{{ forloop.counter }}" style="margin:0;">{{ u }}</label>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-danger-outline btn-block">Revoke Selected</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="page-header"><div><h1>Revoke Access</h1><p class="muted text-sm">Find users with access to one of your files</p></div></div>
+        <div class="card card-pad">
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>File name</label>
+                    <input type="text" name="filename" placeholder="e.g. report.pdf" required>
+                </div>
+                <input type="hidden" name="action" value="Get Users">
+                <button type="submit" class="btn btn-primary btn-block">Find Granted Users</button>
+            </form>
+        </div>
+    {% endif %}
+    <p style="margin-top:20px;"><a href="{% url 'files' %}">&larr; Back to Files</a></p>
+</div>
+{% endblock %}

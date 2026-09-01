@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Profile — SecureShare{% endblock %}
+
+{% block navbar %}{% with nav_active="profile" %}{% include "partials/app_nav.html" %}{% endwith %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+    <div class="page-header">
+        <div>
+            <h1>Your Profile</h1>
+            <p class="muted text-sm">Full account details</p>
+        </div>
+    </div>
+
+    <div class="dashboard-columns">
+        <section class="panel">
+            <div class="panel-header"><h2>Account</h2></div>
+            <table class="table">
+                <tr><td>Name</td><td>{{ profile.name }}</td></tr>
+                <tr><td>Username</td><td>{{ profile.user.username }}</td></tr>
+                <tr><td>Email</td><td>{{ profile.user.email }}</td></tr>
+                <tr><td>Wallet address</td><td class="mono text-sm">{{ wallet_address }}</td></tr>
+            </table>
+
+            <div class="panel-header" style="margin-top:24px;">
+                <h2>Verified Attributes</h2>
+            </div>
+            {% if profile.attributes.all %}
+            <div>
+                {% for a in profile.attributes.all %}<span class="chip">{{ a.key }}:{{ a.value }}</span>{% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-state">No attributes assigned yet.</p>
+            {% endif %}
+            <a href="{% url 'request_attributes' %}" class="btn btn-outline btn-sm" style="margin-top:14px;">Request an attribute</a>
+        </section>
+
+        <aside class="panel">
+            <div class="panel-header"><h2>Attribute Requests</h2></div>
+            {% if my_attr_requests %}
+            <div class="scroll-list">
+                <table class="mini-table">
+                    <tr><th>Requested</th><th>Status</th></tr>
+                    {% for r in my_attr_requests %}
+                    <tr>
+                        <td>{{ r.key }}:{{ r.value }}</td>
+                        <td><span class="status-badge status-{{ r.status }}">{{ r.get_status_display }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-state">No attribute requests yet.</p>
+            {% endif %}
+        </aside>
+    </div>
+
+    <p style="margin-top:20px;"><a href="{% url 'dashboard' %}">&larr; Back to Dashboard</a></p>
+</div>
+{% endblock %}

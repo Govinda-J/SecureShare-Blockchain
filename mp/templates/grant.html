@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Grant Access — SecureShare{% endblock %}
+
+{% block navbar %}{% with nav_active="files" %}{% include "partials/app_nav.html" %}{% endwith %}{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+    {% if filename %}
+        <div class="page-header"><div>
+            <h1>{{ filename }}</h1>
+            {% if policy %}<p class="muted text-sm">Policy: <span class="mono">{{ policy }}</span></p>{% endif %}
+        </div></div>
+
+        <div class="panel" style="margin-bottom:20px;">
+            <div class="panel-header"><h2>Pending Requests</h2></div>
+            {% if details %}
+            <table class="table">
+                <thead><tr><th>Username</th><th>Their Attributes</th><th>Access Policy Satisfaction</th><th></th></tr></thead>
+                <tbody>
+                {% for entry in details %}
+                <tr>
+                    <td data-label="Username">{{ entry.username }}</td>
+                    <td data-label="Their Attributes">
+                        {% for k, v in entry.attributes.items %}<span class="chip chip-muted">{{ k }}:{{ v }}</span>{% empty %}<em class="muted">none assigned</em>{% endfor %}
+                    </td>
+                    <td data-label="Access Policy Satisfaction">
+                        <span class="status-badge {% if entry.satisfies_policy %}status-approved{% else %}status-rejected{% endif %}">
+                            {% if entry.satisfies_policy %}Yes — To Be Approved{% else %}No — To Be Rejected{% endif %}
+                        </span>
+                    </td>
+                    <td data-label="">
+                        <form method="post" action="" class="inline-form" onsubmit="showSubmitOverlay('Processing request...')">
+                            {% csrf_token %}
+                            <input type="hidden" name="filename" value="{{ filename }}">
+                            <input type="hidden" name="action" value="grant">
+                            <input type="hidden" name="target_username" value="{{ entry.username }}">
+                            <button type="submit" class="btn btn-outline btn-sm">Process</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <form method="post" action="" style="margin-top:16px;" onsubmit="showSubmitOverlay('Processing requests...')">
+                {% csrf_token %}
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <input type="hidden" name="action" value="grant">
+                <button type="submit" class="btn btn-primary">Process All Requests</button>
+            </form>
+            {% else %}
+            <p class="empty-state">No pending requests for this file right now.</p>
+            {% endif %}
+        </div>
+
+        <div class="panel">
+            <div class="panel-header"><h2>Past Requests</h2></div>
+            {% if past_requests %}
+            <div class="scroll-list" style="max-height:320px;">
+                <table class="table">
+                    <thead><tr><th>Username</th><th>Attributes</th><th>Result</th><th>Processed</th></tr></thead>
+                    <tbody>
+                    {% for entry in past_requests %}
+                    <tr>
+                        <td data-label="Username">{{ entry.username }}</td>
+                        <td data-label="Attributes">
+                            {% for k, v in entry.attributes.items %}<span class="chip chip-muted">{{ k }}:{{ v }}</span>{% empty %}<em class="muted">none assigned</em>{% endfor %}
+                        </td>
+                        <td data-label="Result"><span class="status-badge status-{{ entry.status }}">{{ entry.status|title }}</span></td>
+                        <td data-label="Processed">{{ entry.resolved_at }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-state">No requests have been processed for this file yet.</p>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="page-header"><div><h1>Grant Access</h1><p class="muted text-sm">Check pending requests for one of your files</p></div></div>
+        <div class="card card-pad" style="max-width:480px;">
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>File name</label>
+                    <input type="text" name="filename" placeholder="e.g. report.pdf" required>
+                </div>
+                <input type="hidden" name="action" value="check">
+                <button type="submit" class="btn btn-primary btn-block">Check Requests</button>
+            </form>
+        </div>
+    {% endif %}
+    <p style="margin-top:20px;"><a href="{% url 'files' %}">&larr; Back to Files</a></p>
+</div>
+{% endblock %}

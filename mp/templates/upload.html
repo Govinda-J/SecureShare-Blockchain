@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Upload File — SecureShare{% endblock %}
+
+{% block navbar %}{% with nav_active="files" %}{% include "partials/app_nav.html" %}{% endwith %}{% endblock %}
+
+{% block content %}
+<datalist id="attr-key-suggestions">
+    {% for k in attribute_keys %}<option value="{{ k }}">{% endfor %}
+</datalist>
+
+<div class="page-wrap narrow">
+    <div class="page-header"><div><h1>Upload File</h1><p class="muted text-sm">Encrypt a file and define who can access it</p></div></div>
+
+    <div class="card card-pad">
+        <form method="post" action="" enctype="multipart/form-data" onsubmit="return serializePolicy(event)">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>File</label>
+                <input type="file" name="file" required>
+            </div>
+
+            <div class="form-group">
+                <label>Access Policy</label>
+                <p class="muted text-sm" style="margin-bottom:8px;">Anyone requesting this file must match every key:value pair below (checked against their admin-verified attributes).</p>
+                <div id="policy-pairs"></div>
+                <button type="button" class="add-field-btn" onclick="addPolicyPair()">+ Add Access Policy Field</button>
+            </div>
+
+            <input type="hidden" name="access_policy" id="access_policy_input">
+            <button type="submit" class="btn btn-primary btn-block">Upload</button>
+        </form>
+    </div>
+    <p style="margin-top:20px;"><a href="{% url 'files' %}">&larr; Back to Files</a></p>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function addPolicyPair() {
+        const container = document.getElementById('policy-pairs');
+        const row = document.createElement('div');
+        row.className = 'policy-row';
+        row.innerHTML = `
+            <input type="text" class="policy-key" placeholder="Attribute key (e.g. department)" list="attr-key-suggestions">
+            <input type="text" class="policy-value" placeholder="Required value (e.g. HR)">
+            <button type="button" class="icon-btn" onclick="this.parentElement.remove()">&times;</button>
+        `;
+        container.appendChild(row);
+    }
+
+    function serializePolicy(e) {
+        const keys = document.querySelectorAll('.policy-key');
+        const values = document.querySelectorAll('.policy-value');
+        const pairs = [];
+        keys.forEach((k, i) => {
+            const key = k.value.trim();
+            const val = values[i].value.trim();
+            if (key && val) pairs.push(`${key}:${val}`);
+        });
+        if (pairs.length === 0) {
+            alert('Add at least one access policy attribute (key + value) before uploading.');
+            e.preventDefault();
+            return false;
+        }
+        document.getElementById('access_policy_input').value = pairs.join(', ');
+        showSubmitOverlay('Uploading and encrypting your file...');
+        return true;
+    }
+
+    addPolicyPair();
+</script>
+{% endblock %}

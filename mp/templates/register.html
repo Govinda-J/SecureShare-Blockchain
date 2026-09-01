@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Register — SecureShare{% endblock %}
+
+{% block navbar %}{% include "partials/public_nav.html" %}{% endblock %}
+
+{% block content %}
+<div class="auth-shell">
+    <div class="auth-card">
+        <h1>Create your account</h1>
+        <p class="auth-sub muted">Registers you on-chain and in SecureShare</p>
+        <form method="post" action="{% url 'register' %}" onsubmit="showSubmitOverlay('Registering your account...')">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Full name</label>
+                <input type="text" name="name" id="name" placeholder="Jane Doe" required autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" placeholder="janedoe" required autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="jane@example.com" required autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" required>
+            </div>
+            <div class="form-group">
+                <label for="ethereum_private_key">Ethereum private key</label>
+                <input type="password" name="ethereum_private_key" id="ethereum_private_key" placeholder="0x..." required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+        <p class="auth-toggle">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        <p class="auth-note">
+            Attribute-based permissions (e.g. department, clearance) are assigned to your
+            account by an administrator after registration — they aren't set here. Once
+            you're in, you can request specific attributes from your dashboard.
+        </p>
+    </div>
+</div>
+{% endblock %}

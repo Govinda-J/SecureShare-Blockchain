@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Request Attributes — SecureShare{% endblock %}
+
+{% block navbar %}{% with nav_active="dashboard" %}{% include "partials/app_nav.html" %}{% endwith %}{% endblock %}
+
+{% block content %}
+<datalist id="attr-key-suggestions">
+    {% for k in attribute_keys %}<option value="{{ k }}">{% endfor %}
+</datalist>
+
+<div class="page-wrap narrow">
+    <div class="page-header">
+        <div>
+            <h1>Request Attributes</h1>
+            <p class="muted text-sm">Ask an admin to verify a new attribute for your account.</p>
+        </div>
+    </div>
+
+    <div class="card card-pad" style="margin-bottom:20px;">
+        <form method="post" action="" onsubmit="showSubmitOverlay('Submitting your request...')">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="key">Attribute key</label>
+                <input type="text" name="key" id="key" placeholder="e.g. department" list="attr-key-suggestions" required>
+            </div>
+            <div class="form-group">
+                <label for="value">Value</label>
+                <input type="text" name="value" id="value" placeholder="e.g. HR" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Submit Request</button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header"><h2>Your Requests</h2></div>
+        {% if my_attr_requests %}
+        <table class="table">
+            <thead><tr><th>Requested</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for r in my_attr_requests %}
+                <tr>
+                    <td data-label="Requested">{{ r.key }}:{{ r.value }}</td>
+                    <td data-label="Status"><span class="status-badge status-{{ r.status }}">{{ r.get_status_display }}</span></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">You haven't requested any attributes yet.</p>
+        {% endif %}
+    </div>
+
+    <p style="margin-top:20px;"><a href="{% url 'dashboard' %}">&larr; Back to Dashboard</a></p>
+</div>
+{% endblock %}

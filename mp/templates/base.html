@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/mp/style.css">
+    {% block extra_head %}{% endblock %}
+    <title>{% block title %}SecureShare{% endblock %}</title>
+</head>
+<body>
+    {% block navbar %}{% endblock %}
+
+    {% if messages %}
+    <ul class="messages" id="flash-messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+            <button type="button" class="close-message" onclick="this.parentElement.remove();">&times;</button>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    <!-- Shown while a long-running form POST (upload/download/grant/etc.)
+         is in flight. Pure client-side — the browser keeps this painted
+         until the server responds and the page navigates, so no AJAX is
+         needed for it to work correctly. -->
+    <div id="submit-overlay">
+        <div class="box">
+            <div class="spinner"></div>
+            <p id="submit-overlay-text"></p>
+            <span class="sub">Do not close, refresh, or navigate away.</span>
+        </div>
+    </div>
+
+    <script>
+        function showSubmitOverlay(message) {
+            document.getElementById('submit-overlay-text').textContent = message;
+            document.getElementById('submit-overlay').classList.add('active');
+            return true; // let the form submission proceed as normal
+        }
+
+        // Auto-dismiss flash messages after a few seconds.
+        (function () {
+            var items = document.querySelectorAll('#flash-messages li');
+            items.forEach(function (li, i) {
+                setTimeout(function () {
+                    li.style.transition = 'opacity 0.4s ease';
+                    li.style.opacity = '0';
+                    setTimeout(function () { li.remove(); }, 400);
+                }, 6000 + i * 400);
+            });
+        })();
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

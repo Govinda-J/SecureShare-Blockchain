@@ -1,0 +1,17 @@
+<nav class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">&#9670;</span> SecureShare</a>
+        <div class="nav-links">
+            <a href="{% url 'dashboard' %}" class="{% if nav_active == 'dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="{% url 'files' %}" class="{% if nav_active == 'files' %}active{% endif %}">Files</a>
+            <a href="{% url 'activities' %}" class="{% if nav_active == 'activities' %}active{% endif %}">Activities</a>
+            <a href="{% url 'profile' %}" class="{% if nav_active == 'profile' %}active{% endif %}">Profile</a>
+        </div>
+        <div class="nav-actions">
+            {% if request.user.is_staff %}
+                <a href="{% url 'admin_home' %}">Admin</a>
+            {% endif %}
+            <a href="{% url 'logout' %}" class="btn btn-outline btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>

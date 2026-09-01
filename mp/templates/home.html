@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}SecureShare — Attribute-Based Encrypted File Sharing{% endblock %}
+
+{% block navbar %}{% include "partials/public_nav.html" %}{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <span class="eyebrow">&#9889; Built on Ethereum · AES-256 · ABAC</span>
+    <h1>Share files that only <span class="accent">the right people</span> can ever open</h1>
+    <p class="lead">
+        SecureShare encrypts, chunks, and distributes your files, while an on-chain
+        smart contract enforces who can request and receive access — governed by
+        admin-verified attributes, not self-declared claims.
+    </p>
+    <div class="hero-actions">
+        <a href="{% url 'register' %}" class="btn btn-primary">Create an account</a>
+        <a href="{% url 'login' %}" class="btn btn-outline">I already have one</a>
+    </div>
+</section>
+
+<section class="features">
+    <div class="feature-card">
+        <div class="feature-icon">&#128274;</div>
+        <h3>Attribute-Based Access</h3>
+        <p>Owners define policies like <span class="mono">department:HR</span>. Only requesters whose admin-verified attributes match every pair are granted access.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">&#9881;&#65039;</div>
+        <h3>On-Chain, Tamper-Proof</h3>
+        <p>Every registration, request, grant, and rejection is recorded on Ethereum — an auditable trail no single party can quietly alter.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">&#128230;</div>
+        <h3>Encrypted &amp; Chunked</h3>
+        <p>Files are AES-encrypted and split into deduplicated chunks before storage, so no single stored piece ever holds a readable file.</p>
+    </div>
+</section>
+
+<div class="how-it-works">
+    <div class="inner">
+        <h2>How it works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h4>Register your wallet</h4>
+                <p>Create an account tied to your Ethereum key.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h4>Get verified attributes</h4>
+                <p>An admin assigns the attributes that identify you.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h4>Upload or request</h4>
+                <p>Set an access policy, or ask an owner for access.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <h4>Access is enforced on-chain</h4>
+                <p>Only matching attributes unlock the file.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p class="landing-footer">SecureShare — a blockchain-backed ABAC file sharing project.</p>
+{% endblock %}

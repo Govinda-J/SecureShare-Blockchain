@@ -1,0 +1,26 @@
+# Environment & secrets
+.env
+credentials.json
+token.json
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+*.egg-info/
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
